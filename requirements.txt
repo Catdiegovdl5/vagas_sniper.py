@@ -9,3 +9,4 @@ google-auth-oauthlib
 PyPDF2
 loguru
 apify-client
+langdetect
