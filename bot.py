@@ -371,7 +371,7 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
 
         proposal_raw = job.get('ai_proposal', '')
         plat_lower = job.get('platform', '').lower()
-        is_freela_plat = any(p in plat_lower for p in ['workana', 'novenove', 'freelancer'])
+        is_freela_plat = any(p in plat_lower for p in ['workana', '99freelas', 'freelancer'])
         has_proposal = proposal_raw and proposal_raw != 'N/A' and is_freela_plat
 
         text = (
