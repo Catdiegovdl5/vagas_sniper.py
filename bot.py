@@ -11,7 +11,8 @@ import sys
 sys.path.append(".")
 from database import insert_jobs
 
-TOKEN = "7724330024:AAFtoSLgXVDlvNmeyPCVMnkWIqbk4wvLSVg"
+import os
+TOKEN = os.environ.get("TELEGRAM_TOKEN", "7724330024:AAFtoSLgXVDlvNmeyPCVMnkWIqbk4wvLSVg")
 
 import traceback
 from loguru import logger
