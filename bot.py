@@ -41,17 +41,23 @@ async def global_error_handler(event: types.ErrorEvent):
 import copy
 
 DEFAULT_RESUME = """
-Diego Santos | Editor de Vídeo & Especialista em Automação e IA
+Diego Santos | Especialista Digital Full-Stack
 
-Sobre Mim:
-Especialista na engenharia da atenção. Minhas edições não apenas contam histórias, mas são otimizadas algoritmicamente para máxima retenção, resultando em vídeos que ultrapassam a marca de Meio Milhão de visualizações orgânicas. Domino desde formatos curtos hiper-dinâmicos até automação de cortes na nuvem.
-Ferramentas: Premiere Pro, CapCut Pro, After Effects, Python (Automação), Engajamento Viral.
+🎯 Áreas de Atuação:
+- Gestão de Tráfego Pago: Meta Ads (Facebook/Instagram), Google Ads, TikTok Ads, lojistas, infoprodutos e lançamentos digitais.
+- Edição de Vídeo & Motion: Premiere Pro, CapCut Pro, After Effects. Especialista em retenção e viralização (524k+ views orgânicos).
+- Criação de Conteúdo / Social Media: Reels, TikTok, YouTube Shorts, copy para posts e campanhas.
+- Automação com IA e Python: scripts de automação, bots do Telegram, pipelines de vídeo na nuvem, integrações com APIs de IA (Groq, OpenAI).
+- Desenvolvimento Web: HTML, CSS, JavaScript, sites de portfólio, landing pages de alta conversão.
 
-Cases Principais (Portfólio):
-1. Instagram Reels (@subindoseuqi): 524.000+ Views (Hits de 190k, 109k, 25k). Edição limpa, timing cômico perfeito, cortes em "L" e dinâmicas de vlog.
-2. TikTok Nicho Geek (@meu.treino8): 56.600+ Views (Hits de 39.4k, 35.5k). Hooks imersivos nos primeiros 3s, sound design épico e cortes super dinâmicos.
-3. YouTube Reacts (@CapituloV.I.P): 370 Vídeos Publicados. Layout de React Inteligente (PiP), escalabilidade de produção (batch editing) e manutenção constante de retenção.
-4. Automação de Cortes (Cloud): Desenvolvi scripts em Python para analisar vídeos, identificar os momentos com maior potencial viral e gerar layouts de react (Picture-in-Picture) automaticamente via código.
+💼 Cases e Resultados:
+- 524.000+ views orgânicos em um único Reels (Instagram).
+- 56.600+ views no TikTok em nicho Geek/Anime.
+- 370 vídeos publicados no YouTube com identidade visual consistente.
+- Pipeline automatizada de corte e montagem de vídeos com Python.
+- Desenvolvimento de bot inteligente de captura de vagas com IA (Groq) e Telegram.
+
+🛠️ Ferramentas: Meta Business Suite, Google Ads Manager, Premiere Pro, CapCut, After Effects, Python, Playwright, GitHub, Render, n8n.
 """
 
 DEFAULT_SETTINGS = {
@@ -365,54 +371,32 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
     if len(vagas_br) < len(all_jobs):
         await message.answer(f"🗑️ *Limpeza concluída:* {len(all_jobs) - len(vagas_br)} vagas gringas foram deletadas!", parse_mode="Markdown")
         
-    if not settings["ai_filter"]:
-        premium_jobs = vagas_br
-        await message.answer(f"🚀 *Modo Trator Ativado!*\nEnviando todas as {len(premium_jobs)} vagas brutas brasileiras sem filtro de IA...", parse_mode="Markdown")
-    else:
-        user_id = message.chat.id
-        curriculo_path = f"curriculo_{user_id}.txt"
-        resume_text = DEFAULT_RESUME
-        if os.path.exists(curriculo_path):
-            with open(curriculo_path, "r", encoding="utf-8") as f:
-                content = f.read().strip()
-                if content:
-                    resume_text = content
+    # --- NOVO MODELO: Enviar TODAS as vagas BR. IA usada APENAS para gerar proposta em freelance ---
+    premium_jobs = vagas_br
+    await message.answer(f"🚀 *{len(premium_jobs)} vagas encontradas!* Gerando propostas para Workana/99Freelas e enviando...", parse_mode="Markdown")
 
-        await message.answer(f"🧠 *Filtro IA (Groq) Ativado!*\nLendo {len(vagas_br)} vagas filtradas simultaneamente para cruzar com o seu currículo...", parse_mode="Markdown")
+    import scrapers.ai_filter as ai_filter
 
-        async def process_job(job):
+    async def generate_proposal_only(job):
+        """Usa a IA apenas para gerar proposta em vagas de plataformas freelance."""
+        plat_lower = job.get('platform', '').lower()
+        is_freela_plat = any(p in plat_lower for p in ['workana', '99freelas', 'freelancer'])
+        if is_freela_plat:
             match_data = await ai_filter.score_job_match(
-                resume_text, 
-                job, 
-                target_keyword=keyword, 
-                target_location=settings["location"], 
+                DEFAULT_RESUME, job,
+                target_keyword=keyword,
+                target_location=settings["location"],
                 target_level=settings["level"],
                 target_education=settings["education"],
                 target_contract=settings["contract"]
             )
-            job['ai_aprovado'] = match_data.get('aprovado', False)
-            job['ai_score'] = match_data.get('score', 0)
-            job['ai_reason'] = match_data['reason']
-            job['ai_reqs'] = match_data.get('reqs', 'Não informado.')
-            job['ai_bonus'] = match_data.get('bonus', 'Não mencionado.')
-            job['ai_benefits'] = match_data.get('benefits', 'Não informado.')
-            job['ai_model'] = match_data.get('model', 'Não especificado.')
             job['ai_proposal'] = match_data.get('proposal', '')
-            job['ai_salary_declared'] = match_data.get('salary_declared', False)
-            job['ai_has_benefits'] = match_data.get('has_benefits', False)
-            return job
+        else:
+            job['ai_proposal'] = ''
+        return job
 
-        scored_jobs = await asyncio.gather(*(process_job(job) for job in vagas_br))
-        
-        premium_jobs = [j for j in scored_jobs if j.get('ai_aprovado', False)]
-        # Ranking por score de match com o currículo (mais relevante primeiro)
-        premium_jobs.sort(key=lambda x: x.get('ai_score', 0), reverse=True)
-        
-        if not premium_jobs:
-            await message.answer("🚧 *Groq:* O Filtro Estruturado Reprovou todas as vagas (Violação das regras). Nenhuma sobreviveu.", parse_mode="Markdown")
-            return
-            
-        await message.answer(f"✅ *Filtro Concluído!*\n\nDe {len(raw_jobs)} vagas brutas, apenas **{len(premium_jobs)} vagas** passaram pela Guilhotina da IA. Enviando as Top 5...", parse_mode="Markdown")
+    # Gera propostas em paralelo (só para freelance)
+    premium_jobs = await asyncio.gather(*(generate_proposal_only(j) for j in premium_jobs))
         
     await asyncio.to_thread(insert_jobs, premium_jobs)
     import auto_apply
@@ -501,8 +485,6 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
                 await send_with_retry(lambda: sent_msg.reply(prop_text, parse_mode="Markdown"))
                 
             count += 1
-            if count >= 10:
-                break
             await asyncio.sleep(1.2)  # 1.2s entre mensagens para evitar rate limit do Telegram
         except Exception as e:
             logger.error(f"Erro Markdown ao enviar vaga '{job.get('title')}': {e}")
