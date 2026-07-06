@@ -265,10 +265,30 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
 
     import os
     import scrapers.ai_filter as ai_filter
+    import scrapers.ai_filter as ai_filter
     
+    await message.answer(f"🛡️ *Escudo PT-BR Ativado!*\nLimpando vagas gringas antes do processamento final...", parse_mode="Markdown")
+    from langdetect import detect
+    
+    def is_brazilian_job(text):
+        try:
+            if len(text) < 20: return True
+            return detect(text) == 'pt'
+        except:
+            return True
+            
+    # Pré-filtro brutal: Se não for PT-BR, lixo.
+    vagas_br = []
+    for job in all_jobs:
+        if is_brazilian_job(job.get('requirements', '')):
+            vagas_br.append(job)
+            
+    if len(vagas_br) < len(all_jobs):
+        await message.answer(f"🗑️ *Limpeza concluída:* {len(all_jobs) - len(vagas_br)} vagas gringas foram deletadas!", parse_mode="Markdown")
+        
     if not user_settings["ai_filter"]:
-        premium_jobs = all_jobs
-        await message.answer(f"🚀 *Modo Trator Ativado!*\nEnviando todas as {len(premium_jobs)} vagas brutas sem filtro de IA...", parse_mode="Markdown")
+        premium_jobs = vagas_br
+        await message.answer(f"🚀 *Modo Trator Ativado!*\nEnviando todas as {len(premium_jobs)} vagas brutas brasileiras sem filtro de IA...", parse_mode="Markdown")
     else:
         curriculo_path = "curriculo.txt"
         resume_text = ""
@@ -276,28 +296,7 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
             with open(curriculo_path, "r", encoding="utf-8") as f:
                 resume_text = f.read()
 
-        await message.answer(f"🛡️ *Escudo PT-BR Ativado!*\nLimpando vagas gringas antes de enviar para a IA...", parse_mode="Markdown")
-        
-        from langdetect import detect
-        
-        def is_brazilian_job(text):
-            try:
-                # Se for muito curto, deixa passar para a IA avaliar
-                if len(text) < 20: return True
-                return detect(text) == 'pt'
-            except:
-                return True
-                
-        # Pré-filtro brutal: Se não for PT-BR, lixo.
-        vagas_br = []
-        for job in all_jobs:
-            if is_brazilian_job(job.get('requirements', '')):
-                vagas_br.append(job)
-                
-        if len(vagas_br) < len(all_jobs):
-            await message.answer(f"🗑️ *Limpeza concluída:* {len(all_jobs) - len(vagas_br)} vagas gringas foram deletadas!\n🧠 *Filtro IA (Groq) Ativado nas {len(vagas_br)} vagas restantes...*", parse_mode="Markdown")
-        else:
-            await message.answer(f"🧠 *Filtro IA (Groq) Ativado!*\nLendo {len(vagas_br)} vagas filtradas simultaneamente para cruzar com o seu currículo...", parse_mode="Markdown")
+        await message.answer(f"🧠 *Filtro IA (Groq) Ativado!*\nLendo {len(vagas_br)} vagas filtradas simultaneamente para cruzar com o seu currículo...", parse_mode="Markdown")
 
         async def process_job(job):
             match_data = await ai_filter.score_job_match(
