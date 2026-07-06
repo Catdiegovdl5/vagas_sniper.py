@@ -384,7 +384,7 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
         await message.answer(f"✅ *Filtro Concluído!*\n\nDe {len(raw_jobs)} vagas brutas, apenas **{len(premium_jobs)} vagas** passaram pela Guilhotina da IA. Enviando as Top 5...", parse_mode="Markdown")
         
     await asyncio.to_thread(insert_jobs, premium_jobs)
-    import scrapers.auto_apply as auto_apply
+    import auto_apply
     
     count = 0
     for job in premium_jobs:
