@@ -9,8 +9,8 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQu
 
 import sys
 sys.path.append(".")
-from database import insert_jobs
-
+from database import insert_jobs, init_db
+init_db()  # Garante que as tabelas existem quando o bot inicia
 import os
 TOKEN = os.environ.get("TELEGRAM_TOKEN", "7724330024:AAFtoSLgXVDlvNmeyPCVMnkWIqbk4wvLSVg")
 
