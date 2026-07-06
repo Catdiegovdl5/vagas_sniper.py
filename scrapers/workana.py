@@ -16,7 +16,7 @@ def scrape(keyword="Python", level="Todos"):
                 
             url = f"https://www.workana.com/jobs?query={search_kw}&page={page}"
             r = requests.get(url, headers=headers, timeout=5)
-            soup = BeautifulSoup(r.text, 'lxml')
+            soup = BeautifulSoup(r.text, 'html.parser')
             
             # A Workana agora usa Vue.js, e os dados estão em um payload JSON dentro da tag <search>
             search_tag = soup.find('search')
@@ -32,7 +32,7 @@ def scrape(keyword="Python", level="Todos"):
                 
                 # Extrair o título puro usando bs4 porque ele vem com tags HTML
                 title_html = item.get('title', '')
-                title_soup = BeautifulSoup(title_html, 'lxml')
+                title_soup = BeautifulSoup(title_html, 'html.parser')
                 title = title_soup.text.strip()
                 if not title:
                     continue
@@ -41,7 +41,7 @@ def scrape(keyword="Python", level="Todos"):
                 link = f"https://www.workana.com/job/{slug}" if slug else url
                 
                 req_text = item.get('description', '')
-                req_text = BeautifulSoup(req_text, 'lxml').text.strip() # limpar html da description também
+                req_text = BeautifulSoup(req_text, 'html.parser').text.strip() # limpar html da description também
                 
                 budget = item.get('budget', 'A Combinar')
                 

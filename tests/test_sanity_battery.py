@@ -154,7 +154,8 @@ async def test_sanity_battery_zero_approval():
                 target_keyword="Python",
                 target_location="Brasil (Remoto)",
                 target_level="Júnior",
-                target_education="Sem Formação"
+                target_education="Sem Formação",
+                target_contract="CLT"
             )
             
             # Assertions to ensure it was indeed rejected

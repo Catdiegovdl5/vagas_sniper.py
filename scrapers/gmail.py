@@ -17,16 +17,17 @@ def scrape(keyword, level="Todos", country="Brasil"):
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
         
-    # Se não houver credencial válida, pede para o usuário logar
+    # Se não houver credencial válida, tenta atualizar ou retorna erro em ambiente headless
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            if not os.path.exists('credentials.json'):
-                print("ERRO: O arquivo credentials.json não foi encontrado. O Agente de Navegação não baixou?")
+            try:
+                creds.refresh(Request())
+            except Exception as refresh_err:
+                print(f"WARNING: Falha ao atualizar credenciais do Gmail: {refresh_err}")
                 return []
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
+        else:
+            print("WARNING: O arquivo token.json está ausente ou inválido, e não há token de atualização disponível. Evitando execução do servidor local de OAuth em ambiente headless.")
+            return []
             
         with open('token.json', 'w') as token:
             token.write(creds.to_json())

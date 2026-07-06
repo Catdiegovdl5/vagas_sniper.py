@@ -1,38 +1,46 @@
-# Orchestration Plan - Sniper_bot IA Filtering Intelligence Refinement
+# Orchestration Plan - vagas_bot Codebase Audit & Optimization
 
-This plan details the steps to implement Python hard-locks, upgrade the LLM model to 70B+, and establish a 50-job sanity test battery with a 0% approval rate for trick jobs.
+This plan details the steps to aggressively audit the codebase, remove dead code/unused imports, resolve stability issues, and implement performance and rate-limiting optimizations for a stable production release.
 
 ## Milestones
 
-### Milestone 1: Decompose & Design
-- **Objective**: Detailed assessment of `scrapers/ai_filter.py` and layout of required code changes.
-- **Worker**: `teamwork_preview_explorer` (conv: explorer_filtering)
+### Milestone 1: Exploration & Audit Proposal
+- **Objective**: Detailed assessment of the entire codebase (`scrapers/`, `tests/`, `bot.py`, `app.py`, `database.py`, etc.) to find dead code, unused imports, potential crash/stability issues, and performance/rate-limiting optimization opportunities.
+- **Worker**: `teamwork_preview_explorer`
+- **Output**: Detailed audit report listing all files to clean, bugs to fix, and optimizations to implement.
 - **Status**: PLANNED
 
-### Milestone 2: Implementation of Hard-Locks & Model Upgrade (R1 & R2)
-- **Objective**: Implement model upgrade to `llama3-70b-8192` (or mixtral-8x7b-32768) and code-level override safety logic.
-- **Worker**: `teamwork_preview_worker` (conv: worker_filtering)
+### Milestone 2: Codebase Audit and Cleanup (R1)
+- **Objective**: Aggressively remove dead code, unused imports, and obsolete files. Rewrite inefficient logic.
+- **Worker**: `teamwork_preview_worker`
 - **Status**: PLANNED
 
-### Milestone 3: 50-Job Trick Dataset & Sanity Test Battery (R3)
-- **Objective**: Create `tests/trick_jobs_dataset.json` with 50 diverse trick jobs and `tests/test_sanity_battery.py` to evaluate them.
-- **Worker**: `teamwork_preview_worker` (conv: worker_filtering) or a new worker instance.
+### Milestone 3: Bug Fixing and Stability (R2)
+- **Objective**: Fix potential bot or server crash issues, enhance exception handling, and handle edge cases robustly.
+- **Worker**: `teamwork_preview_worker`
 - **Status**: PLANNED
 
-### Milestone 4: Verification & Reviews
-- **Objective**: Run E2E test suite, run the 50-job sanity battery, review code correctness and robustness.
-- **Worker**: `teamwork_preview_reviewer` (conv: reviewer_filtering) + `teamwork_preview_challenger` (conv: challenger_filtering)
+### Milestone 4: Performance & Rate-Limiting Optimizations (R3)
+- **Objective**: Implement async task optimization, Groq AI API rate-limiting handling, and scraper reliability.
+- **Worker**: `teamwork_preview_worker`
 - **Status**: PLANNED
 
-### Milestone 5: Forensic Audit
-- **Objective**: Independent audit of the implementation to verify no cheating, no hardcoding, and correct logic.
-- **Worker**: `teamwork_preview_auditor` (conv: auditor_filtering)
+### Milestone 5: Verification & Review
+- **Objective**: Verify that all 53 existing tests pass, write new regression or stress tests if necessary, and ensure no regressions.
+- **Worker**: `teamwork_preview_reviewer` + `teamwork_preview_challenger`
+- **Status**: PLANNED
+
+### Milestone 6: Forensic Audit
+- **Objective**: Perform independent audit checks to verify that implementation conforms to integrity rules and no hardcoding or cheating exists.
+- **Worker**: `teamwork_preview_auditor`
 - **Status**: PLANNED
 
 ## Execution Strategy
-1. Dispatch Explorer to inspect `scrapers/ai_filter.py` and draft the exact logic for Python hard-locks and the model upgrade.
-2. Dispatch Worker to implement R1 (hard-locks) and R2 (model upgrade).
-3. Dispatch Worker to create the 50 trick jobs dataset and sanity test script.
-4. Dispatch Reviewer and Challenger to verify all tests (existing 49 tests + new sanity test) pass, and verify 0% approval on the trick jobs.
-5. Dispatch Forensic Auditor to verify integrity.
-6. Compile final `handoff.md` and notify parent.
+1. Dispatch Explorer to perform a complete codebase audit and output a report with concrete proposed actions.
+2. Review the explorer's report, adjust the milestone details if necessary.
+3. Dispatch Worker to implement R1 (cleanup).
+4. Dispatch Worker to implement R2 (stability fixes).
+5. Dispatch Worker to implement R3 (rate-limiting and performance optimizations).
+6. Dispatch Reviewer and Challenger to verify all existing and new tests pass, and check performance/stability.
+7. Dispatch Forensic Auditor to verify integrity.
+8. Synthesize final results and report to parent.

@@ -1,6 +1,4 @@
 import asyncio
-import sqlite3
-import random
 import importlib
 import PyPDF2
 from aiogram import Bot, Dispatcher, types, F
@@ -40,7 +38,9 @@ async def global_error_handler(event: types.ErrorEvent):
         await event.update.message.answer(msg, parse_mode="Markdown")
 # -------------------------------------------
 
-user_settings = {
+import copy
+
+DEFAULT_SETTINGS = {
     "level": "Todos",
     "location": "Brasil (Remoto)",
     "contract": "Todos", # Todos, PJ, CLT, Freelancer
@@ -64,12 +64,21 @@ user_settings = {
     "ai_filter": True
 }
 
+user_settings_db = {}
+
+def get_user_settings(chat_id):
+    chat_id = str(chat_id)
+    if chat_id not in user_settings_db:
+        user_settings_db[chat_id] = copy.deepcopy(DEFAULT_SETTINGS)
+    return user_settings_db[chat_id]
+
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     await show_main_menu(message)
 
 @dp.callback_query(F.data == "main_menu")
 async def callback_main_menu(callback: CallbackQuery):
+    await callback.answer()
     markup = get_main_menu_markup()
     await callback.message.edit_text("🤖 *Sniper Bot Nativo 100% Operante*\n\nO que você deseja fazer?", reply_markup=markup, parse_mode="Markdown")
 
@@ -86,16 +95,19 @@ def get_main_menu_markup():
 # ----------------- CONFIGURAÇÕES -----------------
 @dp.callback_query(F.data == "settings_menu")
 async def settings_menu(callback: CallbackQuery):
-    await callback.message.edit_text("⚙️ *Configurações do Robô*", reply_markup=get_settings_markup(), parse_mode="Markdown")
+    await callback.answer()
+    chat_id = callback.message.chat.id
+    await callback.message.edit_text("⚙️ *Configurações do Robô*", reply_markup=get_settings_markup(chat_id), parse_mode="Markdown")
 
-def get_settings_markup():
-    p = user_settings["platforms"]
+def get_settings_markup(chat_id):
+    settings = get_user_settings(chat_id)
+    p = settings["platforms"]
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=f"📍 Local: {user_settings['location']} (Mudar)", callback_data="change_location")],
-        [InlineKeyboardButton(text=f"Nível: {user_settings['level']} (Mudar)", callback_data="change_level")],
-        [InlineKeyboardButton(text=f"Contrato: {user_settings['contract']} (Mudar)", callback_data="change_contract")],
-        [InlineKeyboardButton(text=f"Formação: {user_settings['education']} (Mudar)", callback_data="change_education")],
-        [InlineKeyboardButton(text=f"👨‍💻 Modo Exclusivo Freelancer: {'✅ ON' if user_settings.get('modo_freelancer', False) else '❌ OFF'}", callback_data="toggle_modo_freelancer")],
+        [InlineKeyboardButton(text=f"📍 Local: {settings['location']} (Mudar)", callback_data="change_location")],
+        [InlineKeyboardButton(text=f"Nível: {settings['level']} (Mudar)", callback_data="change_level")],
+        [InlineKeyboardButton(text=f"Contrato: {settings['contract']} (Mudar)", callback_data="change_contract")],
+        [InlineKeyboardButton(text=f"Formação: {settings['education']} (Mudar)", callback_data="change_education")],
+        [InlineKeyboardButton(text=f"👨‍💻 Modo Exclusivo Freelancer: {'✅ ON' if settings.get('modo_freelancer', False) else '❌ OFF'}", callback_data="toggle_modo_freelancer")],
         [InlineKeyboardButton(text=f"JSearch: {'✅ ON' if p['jsearch'] else '❌ OFF'}", callback_data="toggle_jsearch"),
          InlineKeyboardButton(text=f"Jooble: {'✅ ON' if p['jooble'] else '❌ OFF'}", callback_data="toggle_jooble")],
         [InlineKeyboardButton(text=f"Workana: {'✅ ON' if p['workana'] else '❌ OFF'}", callback_data="toggle_workana"),
@@ -109,72 +121,94 @@ def get_settings_markup():
         [InlineKeyboardButton(text=f"Glassdoor: {'✅ ON' if p['glassdoor'] else '❌ OFF'}", callback_data="toggle_glassdoor"),
          InlineKeyboardButton(text=f"Infojobs: {'✅ ON' if p['infojobs'] else '❌ OFF'}", callback_data="toggle_infojobs")],
         [InlineKeyboardButton(text=f"📧 Gmail Alertas: {'✅ ON' if p['gmail'] else '❌ OFF'}", callback_data="toggle_gmail")],
-        [InlineKeyboardButton(text=f"🧠 Filtro IA (Groq): {'✅ ON' if user_settings['ai_filter'] else '❌ OFF'}", callback_data="toggle_ai")],
+        [InlineKeyboardButton(text=f"🧠 Filtro IA (Groq): {'✅ ON' if settings['ai_filter'] else '❌ OFF'}", callback_data="toggle_ai")],
         [InlineKeyboardButton(text="🔙 Voltar ao Início", callback_data="main_menu")]
     ])
 
 @dp.callback_query(F.data == "change_level")
 async def change_level(callback: CallbackQuery):
+    await callback.answer()
+    chat_id = callback.message.chat.id
+    settings = get_user_settings(chat_id)
     levels = ["Todos", "Júnior", "Pleno", "Sênior"]
-    idx = levels.index(user_settings["level"])
-    user_settings["level"] = levels[(idx + 1) % len(levels)]
-    await callback.message.edit_reply_markup(reply_markup=get_settings_markup())
+    idx = levels.index(settings["level"])
+    settings["level"] = levels[(idx + 1) % len(levels)]
+    await callback.message.edit_reply_markup(reply_markup=get_settings_markup(chat_id))
 
 @dp.callback_query(F.data == "change_location")
 async def change_location(callback: CallbackQuery):
+    await callback.answer()
+    chat_id = callback.message.chat.id
+    settings = get_user_settings(chat_id)
     locations = ["Brasil (Remoto)", "Londrina/PR", "Assaí/PR"]
-    idx = locations.index(user_settings["location"])
-    user_settings["location"] = locations[(idx + 1) % len(locations)]
-    await callback.message.edit_reply_markup(reply_markup=get_settings_markup())
+    idx = locations.index(settings["location"])
+    settings["location"] = locations[(idx + 1) % len(locations)]
+    await callback.message.edit_reply_markup(reply_markup=get_settings_markup(chat_id))
 
 @dp.callback_query(F.data == "change_contract")
 async def change_contract(callback: CallbackQuery):
+    await callback.answer()
+    chat_id = callback.message.chat.id
+    settings = get_user_settings(chat_id)
     contracts = ["Todos", "PJ", "CLT", "Freelancer"]
-    idx = contracts.index(user_settings["contract"])
-    user_settings["contract"] = contracts[(idx + 1) % len(contracts)]
-    await callback.message.edit_reply_markup(reply_markup=get_settings_markup())
+    idx = contracts.index(settings["contract"])
+    settings["contract"] = contracts[(idx + 1) % len(contracts)]
+    await callback.message.edit_reply_markup(reply_markup=get_settings_markup(chat_id))
 
 @dp.callback_query(F.data == "change_education")
 async def change_education(callback: CallbackQuery):
+    await callback.answer()
+    chat_id = callback.message.chat.id
+    settings = get_user_settings(chat_id)
     educations = ["Todos", "Sem Formação"]
-    idx = educations.index(user_settings["education"])
-    user_settings["education"] = educations[(idx + 1) % len(educations)]
-    await callback.message.edit_reply_markup(reply_markup=get_settings_markup())
+    idx = educations.index(settings["education"])
+    settings["education"] = educations[(idx + 1) % len(educations)]
+    await callback.message.edit_reply_markup(reply_markup=get_settings_markup(chat_id))
 
 @dp.callback_query(F.data == "toggle_ai")
 async def toggle_ai(callback: CallbackQuery):
-    user_settings["ai_filter"] = not user_settings["ai_filter"]
-    await callback.message.edit_reply_markup(reply_markup=get_settings_markup())
+    await callback.answer()
+    chat_id = callback.message.chat.id
+    settings = get_user_settings(chat_id)
+    settings["ai_filter"] = not settings["ai_filter"]
+    await callback.message.edit_reply_markup(reply_markup=get_settings_markup(chat_id))
 
 @dp.callback_query(F.data == "toggle_modo_freelancer")
 async def toggle_modo_freelancer(callback: CallbackQuery):
-    is_now_on = not user_settings.get("modo_freelancer", False)
-    user_settings["modo_freelancer"] = is_now_on
+    await callback.answer()
+    chat_id = callback.message.chat.id
+    settings = get_user_settings(chat_id)
+    is_now_on = not settings.get("modo_freelancer", False)
+    settings["modo_freelancer"] = is_now_on
     
     freelance_plats = ["workana", "novenove", "freelancer"]
     clt_plats = ["jsearch", "jooble", "remotar", "github_vagas", "meta_ads", "indeed", "linkedin", "glassdoor", "infojobs"]
     
     if is_now_on:
-        for p in freelance_plats: user_settings["platforms"][p] = True
-        for p in clt_plats: user_settings["platforms"][p] = False
-        user_settings["contract"] = "Freelancer"
+        for p in freelance_plats: settings["platforms"][p] = True
+        for p in clt_plats: settings["platforms"][p] = False
+        settings["contract"] = "Freelancer"
     else:
-        for p in freelance_plats: user_settings["platforms"][p] = False
-        for p in clt_plats: user_settings["platforms"][p] = True
-        user_settings["contract"] = "Todos"
+        for p in freelance_plats: settings["platforms"][p] = False
+        for p in clt_plats: settings["platforms"][p] = True
+        settings["contract"] = "Todos"
         
-    await callback.message.edit_reply_markup(reply_markup=get_settings_markup())
+    await callback.message.edit_reply_markup(reply_markup=get_settings_markup(chat_id))
 
 @dp.callback_query(F.data.startswith("toggle_"))
 async def toggle_platform(callback: CallbackQuery):
+    await callback.answer()
+    chat_id = callback.message.chat.id
+    settings = get_user_settings(chat_id)
     plat = callback.data.replace("toggle_", "")
-    if plat in user_settings["platforms"]:
-        user_settings["platforms"][plat] = not user_settings["platforms"][plat]
-    await callback.message.edit_reply_markup(reply_markup=get_settings_markup())
+    if plat in settings["platforms"]:
+        settings["platforms"][plat] = not settings["platforms"][plat]
+    await callback.message.edit_reply_markup(reply_markup=get_settings_markup(chat_id))
 
 # ----------------- CAÇAR VAGAS (NICHOS) -----------------
 @dp.callback_query(F.data == "hunt_menu")
 async def hunt_menu(callback: CallbackQuery):
+    await callback.answer()
     markup = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🧠 Especialista em IA", callback_data="nicho_ai")],
         [InlineKeyboardButton(text="💻 Desenvolvimento", callback_data="nicho_dev")],
@@ -188,6 +222,7 @@ async def hunt_menu(callback: CallbackQuery):
 
 @dp.callback_query(F.data.startswith("nicho_"))
 async def show_niche_jobs(callback: CallbackQuery):
+    await callback.answer()
     nicho = callback.data.split("_")[1]
     
     menus = {
@@ -209,19 +244,36 @@ async def show_niche_jobs(callback: CallbackQuery):
 # ----------------- PROCESSO DE BUSCA -----------------
 @dp.callback_query(F.data.startswith("hunt_") and F.data != "hunt_menu")
 async def process_hunt(callback: CallbackQuery):
+    chat_id = callback.message.chat.id
+    settings = get_user_settings(chat_id)
+    active_plats = [k for k, v in settings["platforms"].items() if v]
+    if not active_plats:
+        try:
+            await callback.answer("Ative pelo menos uma plataforma em Configurações!", show_alert=True)
+        except Exception:
+            await callback.message.answer("Ative pelo menos uma plataforma em Configurações!")
+        return
+        
+    await callback.answer()
     keyword = callback.data.split("_", 1)[1]
     await _do_hunt(keyword, callback.message, callback=callback)
 
 async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery = None):
-    
-    active_plats = [k for k, v in user_settings["platforms"].items() if v]
+    chat_id = message.chat.id
+    settings = get_user_settings(chat_id)
+    active_plats = [k for k, v in settings["platforms"].items() if v]
     if not active_plats:
-        if callback: await callback.answer("Ative pelo menos uma plataforma em Configurações!", show_alert=True)
-        else: await message.answer("Ative pelo menos uma plataforma em Configurações!")
+        if callback:
+            try:
+                await callback.answer("Ative pelo menos uma plataforma em Configurações!", show_alert=True)
+                return
+            except Exception:
+                pass
+        await message.answer("Ative pelo menos uma plataforma em Configurações!")
         return
         
     plats_str = ', '.join([p.replace('_', ' ').title() for p in active_plats])
-    msg_text = f"⏳ *Iniciando os motores para: {keyword}*\n\nLocalização: {user_settings['location']}\nNível: {user_settings['level']}\nContrato: {user_settings['contract']}\nFormação: {user_settings['education']}\nPlataformas: {plats_str}..."
+    msg_text = f"⏳ *Iniciando os motores para: {keyword}*\n\nLocalização: {settings['location']}\nNível: {settings['level']}\nContrato: {settings['contract']}\nFormação: {settings['education']}\nPlataformas: {plats_str}..."
     if callback:
         await callback.message.edit_text(msg_text, parse_mode="Markdown")
     else:
@@ -233,9 +285,9 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
             for tentativa in range(3):
                 try:
                     if plat in ['jsearch', 'jooble', 'github_vagas', 'novenove', 'freelancer', 'meta_ads', 'indeed', 'linkedin', 'gmail', 'glassdoor', 'infojobs']:
-                        return await asyncio.to_thread(module.scrape, keyword=keyword, level=user_settings["level"], country=user_settings["location"])
+                        return await asyncio.to_thread(module.scrape, keyword=keyword, level=settings["level"], country=settings["location"])
                     else:
-                        return await asyncio.to_thread(module.scrape, keyword=keyword, level=user_settings["level"])
+                        return await asyncio.to_thread(module.scrape, keyword=keyword, level=settings["level"])
                 except Exception as inner_e:
                     logger.warning(f"Instabilidade no {plat} (Tentativa {tentativa+1}/3): {inner_e}")
                     if tentativa < 2:
@@ -263,8 +315,6 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
         await message.answer("❌ Nenhuma vaga retornou das APIs.")
         return
 
-    import os
-    import scrapers.ai_filter as ai_filter
     import scrapers.ai_filter as ai_filter
     
     await message.answer(f"🛡️ *Escudo PT-BR Ativado!*\nLimpando vagas gringas antes do processamento final...", parse_mode="Markdown")
@@ -286,11 +336,12 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
     if len(vagas_br) < len(all_jobs):
         await message.answer(f"🗑️ *Limpeza concluída:* {len(all_jobs) - len(vagas_br)} vagas gringas foram deletadas!", parse_mode="Markdown")
         
-    if not user_settings["ai_filter"]:
+    if not settings["ai_filter"]:
         premium_jobs = vagas_br
         await message.answer(f"🚀 *Modo Trator Ativado!*\nEnviando todas as {len(premium_jobs)} vagas brutas brasileiras sem filtro de IA...", parse_mode="Markdown")
     else:
-        curriculo_path = "curriculo.txt"
+        user_id = message.chat.id
+        curriculo_path = f"curriculo_{user_id}.txt"
         resume_text = ""
         if os.path.exists(curriculo_path):
             with open(curriculo_path, "r", encoding="utf-8") as f:
@@ -303,10 +354,10 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
                 resume_text, 
                 job, 
                 target_keyword=keyword, 
-                target_location=user_settings["location"], 
-                target_level=user_settings["level"],
-                target_education=user_settings["education"],
-                target_contract=user_settings["contract"]
+                target_location=settings["location"], 
+                target_level=settings["level"],
+                target_education=settings["education"],
+                target_contract=settings["contract"]
             )
             job['ai_aprovado'] = match_data.get('aprovado', False)
             job['ai_score'] = match_data.get('score', 0)
@@ -438,15 +489,18 @@ async def handle_free_text(message: types.Message):
     contract = intent.get("contract", "Todos")
     education = intent.get("education", "Todos")
     
+    chat_id = message.chat.id
+    settings = get_user_settings(chat_id)
+    
     # Atualiza as configurações do usuário de forma autônoma
     if location in ["Brasil (Remoto)", "Londrina/PR", "Assaí/PR"]:
-        user_settings["location"] = location
+        settings["location"] = location
     if level in ["Todos", "Júnior", "Pleno", "Sênior"]:
-        user_settings["level"] = level
+        settings["level"] = level
     if contract in ["Todos", "PJ", "CLT"]:
-        user_settings["contract"] = contract
+        settings["contract"] = contract
     if education in ["Todos", "Sem Formação"]:
-        user_settings["education"] = education
+        settings["education"] = education
         
     # Dispara os motores
     await _do_hunt(keyword, message)
@@ -459,7 +513,8 @@ async def handle_document(message: types.Message, bot: Bot):
         
     msg_status = await message.answer("📄 *Lendo PDF...*", parse_mode="Markdown")
     file = await bot.get_file(message.document.file_id)
-    file_path = "temp_curriculo.pdf"
+    user_id = message.chat.id
+    file_path = f"temp_curriculo_{user_id}.pdf"
     await bot.download_file(file.file_path, file_path)
     
     try:
@@ -470,7 +525,8 @@ async def handle_document(message: types.Message, bot: Bot):
                 text += page.extract_text() or ""
                 text += "\n"
                 
-        with open("curriculo.txt", "w", encoding="utf-8") as f:
+        curriculo_txt_path = f"curriculo_{user_id}.txt"
+        with open(curriculo_txt_path, "w", encoding="utf-8") as f:
             f.write(text)
             
         await msg_status.edit_text("🧠 *Currículo Salvo!*\nEnviando para o Groq gerar a sua estratégia de busca de vagas...", parse_mode="Markdown")

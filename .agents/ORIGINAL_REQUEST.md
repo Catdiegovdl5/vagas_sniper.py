@@ -58,3 +58,33 @@ Criar um script de teste e um dataset (JSON ou CSV) com 50 vagas projetadas espe
 - [ ] O modelo configurado no Groq é de alta capacidade (70B+).
 - [ ] O script de teste com 50 vagas executa com sucesso.
 - [ ] A taxa de aprovação para as vagas criadas como "pegadinha" no dataset é estritamente 0% (gabarito perfeito de bloqueio).
+
+## Follow-up — 2026-07-06T18:39:50Z
+
+# Teamwork Project Prompt — Draft
+
+> Status: Launched
+> Goal: Craft prompt → get user approval → delegate to teamwork_preview
+
+An extensive audit and optimization of the `vagas_bot` codebase to fix remaining bugs, remove unused/obsolete code, and implement architectural improvements for a 100% stable production release.
+
+Working directory: C:\Users\99196\OneDrive\Documentos\vagas_bot
+Integrity mode: development
+
+## Requirements
+
+### R1. Aggressive Codebase Audit and Cleanup
+Analyze all Python files in the repository. Identify and aggressively remove any dead code, unused imports, or logic that no longer makes sense given the current architecture. Rewrite inefficient logic.
+
+### R2. Bug Fixing and Stability
+Identify any edge cases, unhandled exceptions, or logical errors that could crash the Telegram bot or the web server. Implement robust fixes.
+
+### R3. Performance and Architecture Improvements
+Propose and implement optimizations for better performance, such as optimizing async tasks, improving the Groq AI API rate-limiting strategy, or enhancing the scraper reliability.
+
+## Acceptance Criteria
+
+### Verification
+- [ ] The codebase runs without syntax or import errors.
+- [ ] No regression is introduced to the core functionality (scraping, AI filtering, Telegram UI).
+- [ ] A detailed report of all changes, removed code, and improvements is provided to the user.

@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import get_jobs, insert_jobs, init_db
 import uvicorn
 import os
+import asyncio
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -70,14 +71,14 @@ async def trigger_scrapers(request: Request):
         try:
             logger.info(f"[{plat.upper()}] Inicializando Scraper...")
             module = importlib.import_module(f"scrapers.{plat}")
-            jobs = module.scrape(keyword=keyword, level=level)
+            jobs = await asyncio.to_thread(module.scrape, keyword=keyword, level=level)
             all_jobs.extend(jobs)
             logger.info(f"[{plat.upper()}] Sucesso! {len(jobs)} vagas capturadas.")
         except Exception as e:
             logger.error(f"[{plat.upper()}] ERRO CRÍTICO no scraper: {str(e)}")
             
     try:
-        inserted = insert_jobs(all_jobs)
+        inserted = await asyncio.to_thread(insert_jobs, all_jobs)
         logger.info(f"Varredura Finalizada! {len(all_jobs)} vagas totais recebidas. {inserted} novas vagas gravadas no banco de dados.")
         return {"status": "success", "inserted": inserted, "total_found": len(all_jobs)}
     except Exception as e:

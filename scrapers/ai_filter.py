@@ -12,6 +12,9 @@ API_KEYS = [
     os.environ.get("GROQ_API_KEY_2", ""),
     os.environ.get("GROQ_API_KEY_3", "")
 ]
+API_KEYS = [k for k in API_KEYS if k.strip()]
+if not API_KEYS:
+    API_KEYS = ["gsk_dummy_key_placeholder"]
 
 # Semáforo para garantir que no máximo 4 requisições batam no Groq simultaneamente
 sem = asyncio.Semaphore(4)
@@ -31,7 +34,7 @@ class JobEvaluation(BaseModel):
     bonus: str
     benefits: str
     model: str
-    proposal: str = Field(description="Se a vaga for freelancer e aprovada, escreva uma proposta longa e detalhada.")
+    proposal: str = Field(default="N/A", description="Se a vaga for freelancer e aprovada, escreva uma proposta longa e detalhada. Caso contrário, retorne 'N/A'.")
 
 async def score_job_match(resume_text: str, job: dict, target_keyword: str = None, target_location: str = None, target_level: str = "Todos", target_education: str = "Todos", target_contract: str = "Todos") -> dict:
     if not resume_text or len(resume_text) < 10:
@@ -107,7 +110,7 @@ Desc: {req_trunc}
             
             try:
                 response = await client.chat.completions.create(
-                    model="meta-llama/llama-4-scout-17b-16e-instruct", 
+                    model="llama3-70b-8192", 
                     messages=[
                         {"role": "system", "content": "Você é um validador impiedoso que responde APENAS em JSON seguindo exatamente os booleanos e as chaves exigidas."},
                         {"role": "user", "content": prompt}
@@ -253,7 +256,7 @@ Retorne APENAS um objeto JSON com a chave "keywords" contendo um array de 3 stri
             
             try:
                 response = await client.chat.completions.create(
-                    model="meta-llama/llama-4-scout-17b-16e-instruct", 
+                    model="llama3-70b-8192", 
                     messages=[
                         {"role": "system", "content": "Responda ESTRITAMENTE em formato JSON contendo a chave 'keywords' com 3 strings."},
                         {"role": "user", "content": prompt}
@@ -302,7 +305,7 @@ Exemplo: {{"keyword": "vendedor", "location": "Londrina/PR", "level": "Júnior",
             client = AsyncGroq(api_key=key)
             try:
                 response = await client.chat.completions.create(
-                    model="meta-llama/llama-4-scout-17b-16e-instruct", 
+                    model="llama3-70b-8192", 
                     messages=[
                         {"role": "system", "content": "Você é um extrator de intenções JSON estrito."},
                         {"role": "user", "content": prompt}

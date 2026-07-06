@@ -15,7 +15,7 @@ def scrape(keyword="Python", level="Todos"):
                 
             url = f"{base_url}&page={page}"
             response = requests.get(url, headers=headers, timeout=5)
-            soup = BeautifulSoup(response.text, 'lxml')
+            soup = BeautifulSoup(response.text, 'html.parser')
             
             cards = soup.find_all('div', class_='job-list-item')
             for card in cards:

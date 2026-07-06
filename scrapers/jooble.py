@@ -17,7 +17,7 @@ def scrape(keyword, level="Todos", country="Brasil"):
             
         base_url = "jooble.org"
         loc = ""
-        if country == "Brasil": 
+        if "Brasil" in country: 
             base_url = "br.jooble.org"
             loc = "Brazil"
         elif country == "USA": 

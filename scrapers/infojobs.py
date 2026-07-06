@@ -14,54 +14,6 @@ try:
 except ImportError:
     stealth_sync = None
 
-def _patch_mock_page_if_needed(page):
-    if page.__class__.__name__ == "MockPage" and not hasattr(page.__class__, "query_selector_all"):
-        from unittest.mock import MagicMock
-        
-        mock_title_el = MagicMock()
-        mock_title_el.text_content = MagicMock(return_value="Mock Job Developer")
-        mock_title_el.get_attribute = MagicMock(return_value="Mock Title Attribute")
-        
-        mock_comp_el = MagicMock()
-        mock_comp_el.text_content = MagicMock(return_value="Mock Company Inc")
-        mock_comp_el.get_attribute = MagicMock(return_value="Mock Comp Attribute")
-        
-        mock_link_el = MagicMock()
-        mock_link_el.text_content = MagicMock(return_value="Mock Link Text")
-        mock_link_el.get_attribute = MagicMock(return_value="https://www.mock-domain.com/job/123")
-        
-        mock_salary_el = MagicMock()
-        mock_salary_el.text_content = MagicMock(return_value="R$ 8.000")
-        mock_salary_el.get_attribute = MagicMock(return_value="Mock Salary Attribute")
-        
-        long_desc = "Detalhes da vaga mockada. " * 30  # ~780 characters to pass the >=500 test check
-        mock_desc_el = MagicMock()
-        mock_desc_el.text_content = MagicMock(return_value=long_desc)
-        mock_desc_el.get_attribute = MagicMock(return_value="Mock Desc Attribute")
-        
-        def mock_query_selector(self, selector):
-            if "title" in selector or "h3" in selector or "h2" in selector:
-                return mock_title_el
-            elif "employer" in selector or "company" in selector or "empresa" in selector:
-                return mock_comp_el
-            elif "link" in selector or "vaga" in selector or selector == "a":
-                return mock_link_el
-            elif "salary" in selector or "valor" in selector:
-                return mock_salary_el
-            elif "description" in selector or "desc" in selector:
-                return mock_desc_el
-            return mock_desc_el
-            
-        def mock_query_selector_all(self, selector):
-            mock_card = MagicMock()
-            mock_card.query_selector = lambda sel: mock_query_selector(self, sel)
-            mock_card.get_attribute = MagicMock(return_value="https://www.mock-domain.com/job/123")
-            mock_card.text_content = MagicMock(return_value="Mock Card Text")
-            return [mock_card]
-            
-        page.__class__.query_selector = mock_query_selector
-        page.__class__.query_selector_all = mock_query_selector_all
-
 def scrape(keyword, level="Todos", country="Brasil"):
     jobs = []
     encoded_kw = urllib.parse.quote(keyword)
@@ -75,7 +27,6 @@ def scrape(keyword, level="Todos", country="Brasil"):
             locale="pt-BR"
         )
         page = context.new_page()
-        _patch_mock_page_if_needed(page)
         if stealth_sync:
             stealth_sync(page)
             

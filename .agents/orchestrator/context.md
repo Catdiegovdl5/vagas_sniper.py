@@ -1,4 +1,4 @@
-# Context Metadata - vagas_bot Autonomous Recruitment
+# Context Metadata - vagas_bot Audit & Optimization
 
 ## Workspace
 - **Root**: C:\Users\99196\OneDrive\Documentos\vagas_bot
@@ -7,8 +7,8 @@
 - **App Data Directory**: C:\Users\99196\.gemini\antigravity
 
 ## Environment
-- Python environment with libraries installed: Groq, requests, beautifulsoup4, playwright / selenium (possibly), sqlite3.
-- Target LLM provider for ranking: Groq.
+- Python environment with libraries: Groq, requests, beautifulsoup4, playwright, sqlite3, pytest.
+- Target LLM provider: Groq.
 - Integrity mode: development.
 
 ## Constraints

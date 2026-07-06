@@ -10,7 +10,7 @@ def scrape(keyword, level, country="Brasil"):
             
         encoded_kw = urllib.parse.quote(search_kw)
         
-        if country == "Brasil":
+        if "Brasil" in country:
             url = f"https://jsearch.p.rapidapi.com/search?query={encoded_kw}&page=1&num_pages=3&date_posted=month&country=br&language=pt"
         elif country == "USA":
             url = f"https://jsearch.p.rapidapi.com/search?query={encoded_kw}&page=1&num_pages=3&date_posted=month&country=us&language=en"
