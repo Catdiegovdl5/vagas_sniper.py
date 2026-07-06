@@ -18,7 +18,7 @@ from loguru import logger
 # --- Configurando o Monitoramento Profissional (Loguru) ---
 logger.remove() # Remove o handler padrão
 logger.add(sys.stderr, colorize=True, format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{message}</cyan>", level="DEBUG")
-logger.add("erros_robo.log", rotation="10 MB", retention="5 days", level="ERROR", 
+logger.add("erros_robo.log", rotation="10 MB", retention="5 days", level="DEBUG", 
            format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}")
 # ----------------------------------------------------------
 
