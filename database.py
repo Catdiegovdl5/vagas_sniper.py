@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-DB_PATH = "C:\\Users\\99196\\OneDrive\\Documentos\\vagas_bot\\jobs.db"
+DB_PATH = os.path.join(os.path.dirname(__file__), "jobs.db")
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
