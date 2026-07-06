@@ -40,6 +40,20 @@ async def global_error_handler(event: types.ErrorEvent):
 
 import copy
 
+DEFAULT_RESUME = """
+Diego Santos | Editor de Vídeo & Especialista em Automação e IA
+
+Sobre Mim:
+Especialista na engenharia da atenção. Minhas edições não apenas contam histórias, mas são otimizadas algoritmicamente para máxima retenção, resultando em vídeos que ultrapassam a marca de Meio Milhão de visualizações orgânicas. Domino desde formatos curtos hiper-dinâmicos até automação de cortes na nuvem.
+Ferramentas: Premiere Pro, CapCut Pro, After Effects, Python (Automação), Engajamento Viral.
+
+Cases Principais (Portfólio):
+1. Instagram Reels (@subindoseuqi): 524.000+ Views (Hits de 190k, 109k, 25k). Edição limpa, timing cômico perfeito, cortes em "L" e dinâmicas de vlog.
+2. TikTok Nicho Geek (@meu.treino8): 56.600+ Views (Hits de 39.4k, 35.5k). Hooks imersivos nos primeiros 3s, sound design épico e cortes super dinâmicos.
+3. YouTube Reacts (@CapituloV.I.P): 370 Vídeos Publicados. Layout de React Inteligente (PiP), escalabilidade de produção (batch editing) e manutenção constante de retenção.
+4. Automação de Cortes (Cloud): Desenvolvi scripts em Python para analisar vídeos, identificar os momentos com maior potencial viral e gerar layouts de react (Picture-in-Picture) automaticamente via código.
+"""
+
 DEFAULT_SETTINGS = {
     "level": "Todos",
     "location": "Brasil (Remoto)",
@@ -75,6 +89,21 @@ def get_user_settings(chat_id):
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     await show_main_menu(message)
+
+@dp.message(Command("logs"))
+async def cmd_logs(message: types.Message):
+    if not os.path.exists("erros_robo.log"):
+        await message.answer("Nenhum log de erro encontrado.")
+        return
+    
+    with open("erros_robo.log", "r", encoding="utf-8") as f:
+        # Lemos o arquivo todo e pegamos os últimos 3500 caracteres (limite do Telegram)
+        lines = f.readlines()
+        tail = "".join(lines[-50:])
+        if len(tail) > 3500:
+            tail = "..." + tail[-3500:]
+            
+    await message.answer(f"📜 *Últimos Logs (erros_robo.log):*\n\n```log\n{tail}\n```", parse_mode="Markdown")
 
 @dp.callback_query(F.data == "main_menu")
 async def callback_main_menu(callback: CallbackQuery):
@@ -342,10 +371,12 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
     else:
         user_id = message.chat.id
         curriculo_path = f"curriculo_{user_id}.txt"
-        resume_text = ""
+        resume_text = DEFAULT_RESUME
         if os.path.exists(curriculo_path):
             with open(curriculo_path, "r", encoding="utf-8") as f:
-                resume_text = f.read()
+                content = f.read().strip()
+                if content:
+                    resume_text = content
 
         await message.answer(f"🧠 *Filtro IA (Groq) Ativado!*\nLendo {len(vagas_br)} vagas filtradas simultaneamente para cruzar com o seu currículo...", parse_mode="Markdown")
 
