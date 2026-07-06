@@ -1,0 +1,49 @@
+Diego Antônio de Jesus
+Santos
+Growth Engineer | Arquiteto de Automação IA📍 Assaí, PR | ✉  9919622diego@gmail.com | 📱
+WhatsApp
+💼 linkedin.com/in/diegosantos-growth
+🌐 Portfólio: Automação B2B & Fábrica de Cortes - https://linktr.ee/diegogrowth
+Profissional multidisciplinar unindo Growth, dados, criação audiovisual e disciplina operacional. Especialista
+em rastreamento blindado (GTM Server, Meta CAPI) e automações de alta eficiência (Python/n8n). Domínio
+na criação de vídeos hiper-realistas com IA Generativa. Focado em ROI, resolução rápida de problemas
+técnicos e escalabilidade tecnológica de negócios.
+EXPERIÊNCIA PROFISSIONAL
+Estrategista Growth e Atendimento | Glothub (Remoto) 2026
+Tracking & Performance: Gestão e escala de campanhas (YouTube, Meta Ads), com implementação
+avançada de rastreamento via GTM Server-Side e Meta CAPI, garantindo 100% de precisão no GA4 e
+redução estrutural de CPL/CPV.
+Automação Ágil: Integração de agentes de Inteligência Artificial via APIs para qualificação de leads.
+Arquiteto de IA, Automação B2B | Analytic Scale (Remoto) 2025 – Atual
+Ecossistema de Vídeos: Pipeline autônomo (Python/FFmpeg) para fatiar vídeos focados em retenção.
+Ads Fotorrealistas: Criação de anúncios cinematográficos (Veo 3.1, Luma) e LLMs para engenharia
+reversa.
+Scraping B2B: Mineração de leads high-ticket com scripts Python (Playwright) e fluxos (n8n/Make).
+SDR e Closer de Vendas | Autônomo (Remoto) 2024 – Atual
+Gestão comercial via WhatsApp, conversão direta de vendas, contorno de objeções e triagem de leads.
+Auxiliar Técnico e Operacional | Autônomo (Assaí - PR) 2023 – Atual
+Execução de ordens de serviço, controle logístico sob demanda e cumprimento de prazos rigorosos.
+PROJETOS EM DESTAQUE
+Animação Educacional & Sistema de Arbitragem | Leyla School 2026
+Backgrounds Dinâmicos: Animações visuais para vídeo-aulas infanto-juvenis aumentando a retenção.
+Arbitragem de Dados: Sistema criado do zero com cruzamento em tempo real via IA (Cursor/Copilot).
+Automação B2B, Recolorização & Audiovisual 2025
+Prospecção (n8n + Python): Scraping silencioso e qualificação de leads enviados direto ao CRM.
+Edição de Luxo (Dubai): Recolorização fotográfica colorimétrica no Photoshop para o mercado externo.
+Composição de Vídeo (Portugal): Mashup de imagem e animação de cultura pop para cliente via Fiverr.
+HARD SKILLS
+ProgramaçãoCursor, Copilot, ChatGPT, Claude, Python (Pandas, Playwright)
+Tracking GA4, GTM Server-Side, Meta CAPI, Data Layer, Enhanced Conversions
+Automaçãon8n, Make, Zapier, APIs REST, Criação de Agentes LLM
+Ads/MídiaMeta Ads Manager, Google Ads (Search/PMax/Video), TikTok Ads
+AudiovisualCapCut, Premiere, After Effects, Google Veo 3.1, Luma, Runway Gen-3
+Áudio/TI Lyria 3, ElevenLabs, Whisper, Excel Avançado/VBA, PowerShell, Dynamics 365
+CERTIFICAÇÕES OFICIAIS
+•Google Ads: Pesquisa (2026) •IA: Informação e Mineração de Conhecimento (2025)
+•Google Ads: Vídeo (2026) •IA: Visão geral da IA Generativa (2025)
+•Google Ads: Display (2026) •Inteligência Artificial para PMEs (2025)
+•Google Ads: Métricas (2026) •Desenv. Web: HTML, CSS e JavaScript (2025)
+•Google Analytics 4 - GA4 (2026) •Análise e Mineração de Dados (Avançado) (2025)
+•Visão geral da IA no Azure - Microsoft (2025) •Analisando dados com o Excel (2025)
+•IA: Visão Computacional (2025) •Educação Financeira Usando o Excel (2025)
+•IA: Proc. de Linguagem Natural (2025)

@@ -1,0 +1,51 @@
+{
+  "name": "Bot Caçador de Vagas (Rotina Diária)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days"
+            }
+          ]
+        }
+      },
+      "id": "e3b6f84d-fc50-410a-b152-19e48b3b3a6d",
+      "name": "Gatilho Diário",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "command": "python C:\\Users\\99196\\OneDrive\\Documentos\\vagas_bot\\scrapers\\workana_scraper.py"
+      },
+      "id": "2e0a2973-2d2f-48db-8199-52e697a51357",
+      "name": "Rodar Extrator (Workana)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Gatilho Diário": {
+      "main": [
+        [
+          {
+            "node": "Rodar Extrator (Workana)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {}
+}

@@ -1,0 +1,16 @@
+[Unit]
+Description=Vagas Bot no Telegram
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+# O caminho abaixo deve ser o caminho absoluto para onde a pasta vagas_bot foi copiada no servidor.
+# Se você enviou para a pasta /home/ubuntu/vagas_bot, deixe assim:
+WorkingDirectory=/home/ubuntu/vagas_bot
+ExecStart=/home/ubuntu/vagas_bot/venv/bin/python /home/ubuntu/vagas_bot/bot.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

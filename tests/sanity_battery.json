@@ -1,0 +1,402 @@
+[
+  {
+    "title": "Python Developer (USD)",
+    "company": "US Tech Inc",
+    "budget": "$5,000/month",
+    "job_type": "PJ",
+    "requirements": "Looking for a python developer. Salary paid in USD ($5000/month).",
+    "category": "usd_euro"
+  },
+  {
+    "title": "Django Engineer (Euro)",
+    "company": "EuroCorp",
+    "budget": "€4,000/month",
+    "job_type": "PJ",
+    "requirements": "Django developer for remote position. Payment in Euros.",
+    "category": "usd_euro"
+  },
+  {
+    "title": "Backend Python Developer",
+    "company": "Global Talent",
+    "budget": "$3,000 - $4,000",
+    "job_type": "PJ",
+    "requirements": "We pay in USD. Remote from Brazil.",
+    "category": "usd_euro"
+  },
+  {
+    "title": "Full Stack Developer",
+    "company": "US Startup",
+    "budget": "USD 60k/year",
+    "job_type": "PJ",
+    "requirements": "Python and React developer. Compensation in USD.",
+    "category": "usd_euro"
+  },
+  {
+    "title": "Python Developer - Contract",
+    "company": "Staffing Inc",
+    "budget": "$35/hour",
+    "job_type": "PJ",
+    "requirements": "Hourly payment in USD.",
+    "category": "usd_euro"
+  },
+  {
+    "title": "Django Web Developer",
+    "company": "E-Com Europe",
+    "budget": "€3,500",
+    "job_type": "PJ",
+    "requirements": "Looking for Python Django developers. Euros salary.",
+    "category": "usd_euro"
+  },
+  {
+    "title": "Software Engineer (USD)",
+    "company": "Silicon Valley agency",
+    "budget": "$4,000 USD",
+    "job_type": "PJ",
+    "requirements": "Work remotely from Brazil, salary in dollars.",
+    "category": "usd_euro"
+  },
+  {
+    "title": "Remote Python Dev",
+    "company": "Berlin Stars",
+    "budget": "€3,000",
+    "job_type": "PJ",
+    "requirements": "Join our European team, salary in EUR.",
+    "category": "usd_euro"
+  },
+  {
+    "title": "Django Backend Engineer",
+    "company": "US Consulting",
+    "budget": "$4,500/month",
+    "job_type": "PJ",
+    "requirements": "Salary in USD.",
+    "category": "usd_euro"
+  },
+  {
+    "title": "Python Programmer",
+    "company": "UK Solutions",
+    "budget": "£3,000/month",
+    "job_type": "PJ",
+    "requirements": "Salary in British Pounds / Euros.",
+    "category": "usd_euro"
+  },
+  {
+    "title": "Python Script Fix (Workana)",
+    "company": "Workana Client",
+    "budget": "R$ 150 total",
+    "job_type": "Freelancer",
+    "requirements": "Fix a small python scraping script. Project pontual.",
+    "category": "freelance"
+  },
+  {
+    "title": "Bico Python Web Scraping",
+    "company": "Local biz",
+    "budget": "R$ 50/hour",
+    "job_type": "Freelancer",
+    "requirements": "Freelancer to extract data from websites. Paid hourly.",
+    "category": "freelance"
+  },
+  {
+    "title": "Freelance Django Developer",
+    "company": "Freelancer Platform",
+    "budget": "R$ 1.000",
+    "job_type": "Freelancer",
+    "requirements": "Bico/Freelancer to adjust Django admin panels.",
+    "category": "freelance"
+  },
+  {
+    "title": "Workana - Django bug fix",
+    "company": "Ad agency",
+    "budget": "R$ 200",
+    "job_type": "Freelancer",
+    "requirements": "Freelance project to fix single bug.",
+    "category": "freelance"
+  },
+  {
+    "title": "Python Crawler Freelance",
+    "company": "Marketing Corp",
+    "budget": "R$ 500",
+    "job_type": "Freelancer",
+    "requirements": "Bico to build a python scraper.",
+    "category": "freelance"
+  },
+  {
+    "title": "Hourly Python developer",
+    "company": "Individual",
+    "budget": "R$ 40/hour",
+    "job_type": "Freelancer",
+    "requirements": "Need a freelancer for hourly tasks.",
+    "category": "freelance"
+  },
+  {
+    "title": "Django Pontual Adjustment",
+    "company": "SME",
+    "budget": "R$ 300",
+    "job_type": "Freelancer",
+    "requirements": "Projeto pontual para consertar Django.",
+    "category": "freelance"
+  },
+  {
+    "title": "Bico/Freelancer Python Programmer",
+    "company": "Dev Shop",
+    "budget": "R$ 60/hour",
+    "job_type": "Freelancer",
+    "requirements": "Freelance project-based work.",
+    "category": "freelance"
+  },
+  {
+    "title": "Django Specialist (Workana)",
+    "company": "Broker",
+    "budget": "R$ 800",
+    "job_type": "Freelancer",
+    "requirements": "Bico freelance project.",
+    "category": "freelance"
+  },
+  {
+    "title": "Python Dev for quick task",
+    "company": "Biz Owner",
+    "budget": "R$ 100",
+    "job_type": "Freelancer",
+    "requirements": "Freelancer for quick script deployment.",
+    "category": "freelance"
+  },
+  {
+    "title": "Senior Python Developer",
+    "company": "Tech Corp",
+    "budget": "R$ 12.000",
+    "job_type": "CLT",
+    "requirements": "Requires Senior level experience, 5+ years with Django/Flask.",
+    "category": "seniority_mismatch"
+  },
+  {
+    "title": "Pleno Django Engineer",
+    "company": "Fintech",
+    "budget": "R$ 7.000",
+    "job_type": "CLT",
+    "requirements": "Requires Pleno level, 3 years minimum experience.",
+    "category": "seniority_mismatch"
+  },
+  {
+    "title": "Python Team Lead",
+    "company": "Enterprise S/A",
+    "budget": "R$ 15.000",
+    "job_type": "PJ",
+    "requirements": "Manage python developer team. 6+ years experience.",
+    "category": "seniority_mismatch"
+  },
+  {
+    "title": "Senior Backend Developer",
+    "company": "Saas Startup",
+    "budget": "R$ 10.000",
+    "job_type": "PJ",
+    "requirements": "Sênior Python Developer with experience in AWS.",
+    "category": "seniority_mismatch"
+  },
+  {
+    "title": "Lead Python Engineer",
+    "company": "Retail Group",
+    "budget": "R$ 18.000",
+    "job_type": "CLT",
+    "requirements": "Lead development of Python systems. 8+ years.",
+    "category": "seniority_mismatch"
+  },
+  {
+    "title": "Django Pleno/Sênior",
+    "company": "Delivery Co",
+    "budget": "R$ 9.000",
+    "job_type": "PJ",
+    "requirements": "Vaga para desenvolvedor Pleno ou Sênior.",
+    "category": "seniority_mismatch"
+  },
+  {
+    "title": "Python Sênior - Django/FastAPI",
+    "company": "Big Tech",
+    "budget": "R$ 14.000",
+    "job_type": "CLT",
+    "requirements": "Senior software engineer position.",
+    "category": "seniority_mismatch"
+  },
+  {
+    "title": "Backend Developer Pleno",
+    "company": "Logistics S/A",
+    "budget": "R$ 6.500",
+    "job_type": "CLT",
+    "requirements": "Pleno Python position. Requires 3+ years experience.",
+    "category": "seniority_mismatch"
+  },
+  {
+    "title": "Staff Python Engineer",
+    "company": "AI Lab",
+    "budget": "R$ 20.000",
+    "job_type": "PJ",
+    "requirements": "Staff-level backend developer.",
+    "category": "seniority_mismatch"
+  },
+  {
+    "title": "Senior Django Developer",
+    "company": "HealthTech",
+    "budget": "R$ 11.000",
+    "job_type": "CLT",
+    "requirements": "Senior backend developer position.",
+    "category": "seniority_mismatch"
+  },
+  {
+    "title": "Python Developer (Ensino Superior)",
+    "company": "Gov Contractor",
+    "budget": "R$ 5.000",
+    "job_type": "CLT",
+    "requirements": "Graduação em Ciência da Computação / TI Obrigatória.",
+    "category": "mandatory_degree"
+  },
+  {
+    "title": "Django Dev (Bacharelado)",
+    "company": "Education Group",
+    "budget": "R$ 4.500",
+    "job_type": "CLT",
+    "requirements": "Bacharelado completo obrigatório.",
+    "category": "mandatory_degree"
+  },
+  {
+    "title": "Backend Engineer (Faculdade)",
+    "company": "Bank Corp",
+    "budget": "R$ 6.000",
+    "job_type": "CLT",
+    "requirements": "Ensino superior completo é requisito obrigatório.",
+    "category": "mandatory_degree"
+  },
+  {
+    "title": "Python Programmer (Degree)",
+    "company": "Gov Agency",
+    "budget": "R$ 4.000",
+    "job_type": "CLT",
+    "requirements": "Exige diploma de nível superior.",
+    "category": "mandatory_degree"
+  },
+  {
+    "title": "Django Analyst (Graduação)",
+    "company": "Insurance Co",
+    "budget": "R$ 5.500",
+    "job_type": "CLT",
+    "requirements": "Graduação completa em TI é obrigatória.",
+    "category": "mandatory_degree"
+  },
+  {
+    "title": "Software Engineer (TI degree)",
+    "company": "Systems S/A",
+    "budget": "R$ 7.000",
+    "job_type": "PJ",
+    "requirements": "Exige curso superior concluído ou cursando na área de tecnologia.",
+    "category": "mandatory_degree"
+  },
+  {
+    "title": "Python Developer (Curso Superior)",
+    "company": "R&D Center",
+    "budget": "R$ 6.000",
+    "job_type": "CLT",
+    "requirements": "Ensino Superior completo em Engenharia ou Computação.",
+    "category": "mandatory_degree"
+  },
+  {
+    "title": "Django Programmer (Bacharel)",
+    "company": "Fintech Group",
+    "budget": "R$ 8.000",
+    "job_type": "PJ",
+    "requirements": "Requisito: Bacharelado completo em TI.",
+    "category": "mandatory_degree"
+  },
+  {
+    "title": "Backend Specialist (Faculdade)",
+    "company": "Data S/A",
+    "budget": "R$ 9.000",
+    "job_type": "PJ",
+    "requirements": "Ensino Superior completo obrigatório.",
+    "category": "mandatory_degree"
+  },
+  {
+    "title": "Python Dev (Diploma Obrigatório)",
+    "company": "Telecom",
+    "budget": "R$ 5.000",
+    "job_type": "CLT",
+    "requirements": "Diploma de nível superior reconhecido pelo MEC é obrigatório.",
+    "category": "mandatory_degree"
+  },
+  {
+    "title": "Python Developer (Fluent English)",
+    "company": "US Outsourcing",
+    "budget": "R$ 8.000",
+    "job_type": "PJ",
+    "requirements": "Fluent English is mandatory for daily client meetings.",
+    "category": "fluent_english"
+  },
+  {
+    "title": "Django Backend (Inglês Fluente)",
+    "company": "UK Agency",
+    "budget": "R$ 7.000",
+    "job_type": "PJ",
+    "requirements": "Inglês fluente / avançado obrigatório.",
+    "category": "fluent_english"
+  },
+  {
+    "title": "Python Engineer (English Required)",
+    "company": "Remote Global",
+    "budget": "R$ 10.000",
+    "job_type": "PJ",
+    "requirements": "Must speak fluent English.",
+    "category": "fluent_english"
+  },
+  {
+    "title": "Web Scraper (Fluência em Inglês)",
+    "company": "Canada Tech",
+    "budget": "R$ 6.000",
+    "job_type": "PJ",
+    "requirements": "Requisito obrigatório: Inglês fluente.",
+    "category": "fluent_english"
+  },
+  {
+    "title": "Django Developer (English)",
+    "company": "Startup Hub",
+    "budget": "R$ 9.000",
+    "job_type": "PJ",
+    "requirements": "English fluency required for communication.",
+    "category": "fluent_english"
+  },
+  {
+    "title": "Python Dev (Inglês Avançado/Fluente)",
+    "company": "B2B Agency",
+    "budget": "R$ 8.000",
+    "job_type": "PJ",
+    "requirements": "Inglês avançado/fluente obrigatório.",
+    "category": "fluent_english"
+  },
+  {
+    "title": "Software Engineer (Fluent English)",
+    "company": "Global Devs",
+    "budget": "R$ 12.000",
+    "job_type": "PJ",
+    "requirements": "Fluent English is a must.",
+    "category": "fluent_english"
+  },
+  {
+    "title": "Python Developer (Inglês)",
+    "company": "Outsource Co",
+    "budget": "R$ 6.000",
+    "job_type": "PJ",
+    "requirements": "Fluent English required.",
+    "category": "fluent_english"
+  },
+  {
+    "title": "Backend Developer (Fluent English)",
+    "company": "Euro Tech",
+    "budget": "R$ 9.000",
+    "job_type": "PJ",
+    "requirements": "Daily communication in English (Fluent).",
+    "category": "fluent_english"
+  },
+  {
+    "title": "Django Engineer (Inglês Fluente)",
+    "company": "US Software",
+    "budget": "R$ 11.000",
+    "job_type": "PJ",
+    "requirements": "Fluent English is mandatory.",
+    "category": "fluent_english"
+  }
+]
