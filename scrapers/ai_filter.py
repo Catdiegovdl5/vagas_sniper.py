@@ -7,10 +7,14 @@ from pydantic import BaseModel, Field
 
 # O arsenal de chaves que o usuário nos forneceu para triplicar a cota (18.000 Tokens/min)
 import os
+from dotenv import load_dotenv
+load_dotenv()
+
 API_KEYS = [
     os.environ.get("GROQ_API_KEY_1", ""),
     os.environ.get("GROQ_API_KEY_2", ""),
-    os.environ.get("GROQ_API_KEY_3", "")
+    os.environ.get("GROQ_API_KEY_3", ""),
+    os.environ.get("GROQ_API_KEY", "")  # Suporte para chave única local
 ]
 API_KEYS = [k for k in API_KEYS if k.strip()]
 if not API_KEYS:
