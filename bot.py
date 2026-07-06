@@ -409,7 +409,7 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
         premium_jobs.sort(key=lambda x: x.get('ai_score', 0), reverse=True)
         
         if not premium_jobs:
-            await message.answer("🚷 *Groq:* O Filtro Estruturado Reprovou todas as vagas (Violação das regras). Nenhuma sobreviveu.", parse_mode="Markdown")
+            await message.answer("🚧 *Groq:* O Filtro Estruturado Reprovou todas as vagas (Violação das regras). Nenhuma sobreviveu.", parse_mode="Markdown")
             return
             
         await message.answer(f"✅ *Filtro Concluído!*\n\nDe {len(raw_jobs)} vagas brutas, apenas **{len(premium_jobs)} vagas** passaram pela Guilhotina da IA. Enviando as Top 5...", parse_mode="Markdown")
@@ -418,6 +418,22 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
     import auto_apply
     
     count = 0
+
+    async def send_with_retry(coro_fn, max_retries=3):
+        """Executa uma função de envio com retry automático em caso de queda de conexão."""
+        from aiohttp import ClientError
+        for attempt in range(max_retries):
+            try:
+                return await coro_fn()
+            except (ClientError, Exception) as e:
+                if attempt < max_retries - 1:
+                    wait_time = 2 ** attempt  # Backoff exponencial: 1s, 2s, 4s
+                    logger.warning(f"Falha de envio (tentativa {attempt+1}/{max_retries}): {e}. Aguardando {wait_time}s...")
+                    await asyncio.sleep(wait_time)
+                else:
+                    logger.error(f"Envio falhou após {max_retries} tentativas: {e}")
+                    raise
+
     for job in premium_jobs:
         # Pular vagas sem link válido
         link = job.get('link', '')
@@ -475,25 +491,25 @@ async def _do_hunt(keyword: str, message: types.Message, callback: CallbackQuery
             text = text[:4000] + "... [Cortado pelo limite do Telegram]"
             
         try:
-            sent_msg = await message.answer(text, reply_markup=markup, parse_mode="Markdown")
+            sent_msg = await send_with_retry(lambda: message.answer(text, reply_markup=markup, parse_mode="Markdown"))
             
             # Se tiver proposta, envia como resposta à vaga (para não explodir o limite)
             if has_proposal:
                 prop_text = f"🤖 *Proposta Comercial Inteligente (Clique no texto para copiar):*\n\n```\n{proposal_raw}\n```"
                 if len(prop_text) > 4000:
                     prop_text = prop_text[:4000] + "\n```\n... [Cortado]"
-                await sent_msg.reply(prop_text, parse_mode="Markdown")
+                await send_with_retry(lambda: sent_msg.reply(prop_text, parse_mode="Markdown"))
                 
             count += 1
             if count >= 10:
                 break
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(1.2)  # 1.2s entre mensagens para evitar rate limit do Telegram
         except Exception as e:
             logger.error(f"Erro Markdown ao enviar vaga '{job.get('title')}': {e}")
             # Fallback: enviar sem formatação para não perder a vaga
             try:
                 plain = f"💎 {job.get('title','Vaga')}\n🏢 {job.get('company','')}\n🌐 {job.get('platform','')}\n🔗 {link}"
-                await message.answer(plain, reply_markup=InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="🎯 Aplicar", url=link)]]))
+                await send_with_retry(lambda: message.answer(plain, reply_markup=InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="🎯 Aplicar", url=link)]])))
                 count += 1
                 if count >= 10:
                     break
