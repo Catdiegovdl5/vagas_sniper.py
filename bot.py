@@ -60,19 +60,21 @@ Diego Santos | Especialista Digital Full-Stack
 🛠️ Ferramentas: Meta Business Suite, Google Ads Manager, Premiere Pro, CapCut, After Effects, Python, Playwright, GitHub, Render, n8n.
 """
 
+# Grupos de plataformas por tipo
+FREELANCE_PLATFORMS = ["workana", "novenove"]
+EMPREGO_PLATFORMS = ["jsearch", "jooble", "remotar", "github_vagas", "meta_ads", "indeed", "linkedin", "glassdoor", "infojobs"]
+
 DEFAULT_SETTINGS = {
     "level": "Todos",
     "location": "Brasil (Remoto)",
     "contract": "Todos", # Todos, PJ, CLT, Freelancer
     "education": "Todos", # Todos, Sem Formação
-    "modo_freelancer": False,
     "platforms": {
         "jsearch": True,
         "jooble": True,
         "workana": True,
         "remotar": True,
         "novenove": True,
-        "freelancer": True,
         "github_vagas": True,
         "meta_ads": True,
         "indeed": True,
@@ -142,19 +144,22 @@ def get_settings_markup(chat_id):
         [InlineKeyboardButton(text=f"Nível: {settings['level']} (Mudar)", callback_data="change_level")],
         [InlineKeyboardButton(text=f"Contrato: {settings['contract']} (Mudar)", callback_data="change_contract")],
         [InlineKeyboardButton(text=f"Formação: {settings['education']} (Mudar)", callback_data="change_education")],
-        [InlineKeyboardButton(text=f"👨‍💻 Modo Exclusivo Freelancer: {'✅ ON' if settings.get('modo_freelancer', False) else '❌ OFF'}", callback_data="toggle_modo_freelancer")],
-        [InlineKeyboardButton(text=f"JSearch: {'✅ ON' if p['jsearch'] else '❌ OFF'}", callback_data="toggle_jsearch"),
-         InlineKeyboardButton(text=f"Jooble: {'✅ ON' if p['jooble'] else '❌ OFF'}", callback_data="toggle_jooble")],
+        # --- PLATAFORMAS FREELANCE ---
+        [InlineKeyboardButton(text="── 🚀 FREELANCE ──", callback_data="noop")],
         [InlineKeyboardButton(text=f"Workana: {'✅ ON' if p['workana'] else '❌ OFF'}", callback_data="toggle_workana"),
-         InlineKeyboardButton(text=f"Remotar: {'✅ ON' if p['remotar'] else '❌ OFF'}", callback_data="toggle_remotar")],
-        [InlineKeyboardButton(text=f"99Freelas: {'✅ ON' if p['novenove'] else '❌ OFF'}", callback_data="toggle_novenove"),
-         InlineKeyboardButton(text=f"Freelancer: {'✅ ON' if p['freelancer'] else '❌ OFF'}", callback_data="toggle_freelancer")],
-        [InlineKeyboardButton(text=f"GitHub Vagas: {'✅ ON' if p['github_vagas'] else '❌ OFF'}", callback_data="toggle_github_vagas"),
-         InlineKeyboardButton(text=f"Meta Ads: {'✅ ON' if p['meta_ads'] else '❌ OFF'}", callback_data="toggle_meta_ads")],
-        [InlineKeyboardButton(text=f"Indeed: {'✅ ON' if p['indeed'] else '❌ OFF'}", callback_data="toggle_indeed"),
-         InlineKeyboardButton(text=f"LinkedIn: {'✅ ON' if p['linkedin'] else '❌ OFF'}", callback_data="toggle_linkedin")],
+         InlineKeyboardButton(text=f"99Freelas: {'✅ ON' if p['novenove'] else '❌ OFF'}", callback_data="toggle_novenove")],
+        # --- PLATAFORMAS EMPREGO ---
+        [InlineKeyboardButton(text="── 💼 EMPREGO ──", callback_data="noop")],
+        [InlineKeyboardButton(text=f"LinkedIn: {'✅ ON' if p['linkedin'] else '❌ OFF'}", callback_data="toggle_linkedin"),
+         InlineKeyboardButton(text=f"Indeed: {'✅ ON' if p['indeed'] else '❌ OFF'}", callback_data="toggle_indeed")],
         [InlineKeyboardButton(text=f"Glassdoor: {'✅ ON' if p['glassdoor'] else '❌ OFF'}", callback_data="toggle_glassdoor"),
          InlineKeyboardButton(text=f"Infojobs: {'✅ ON' if p['infojobs'] else '❌ OFF'}", callback_data="toggle_infojobs")],
+        [InlineKeyboardButton(text=f"JSearch: {'✅ ON' if p['jsearch'] else '❌ OFF'}", callback_data="toggle_jsearch"),
+         InlineKeyboardButton(text=f"Jooble: {'✅ ON' if p['jooble'] else '❌ OFF'}", callback_data="toggle_jooble")],
+        [InlineKeyboardButton(text=f"Remotar: {'✅ ON' if p['remotar'] else '❌ OFF'}", callback_data="toggle_remotar"),
+         InlineKeyboardButton(text=f"GitHub Vagas: {'✅ ON' if p['github_vagas'] else '❌ OFF'}", callback_data="toggle_github_vagas")],
+        [InlineKeyboardButton(text=f"Meta Ads: {'✅ ON' if p['meta_ads'] else '❌ OFF'}", callback_data="toggle_meta_ads")],
+        # --- OUTROS ---
         [InlineKeyboardButton(text=f"📧 Gmail Alertas: {'✅ ON' if p['gmail'] else '❌ OFF'}", callback_data="toggle_gmail")],
         [InlineKeyboardButton(text=f"🧠 Filtro IA (Groq): {'✅ ON' if settings['ai_filter'] else '❌ OFF'}", callback_data="toggle_ai")],
         [InlineKeyboardButton(text="🔙 Voltar ao Início", callback_data="main_menu")]
@@ -208,27 +213,10 @@ async def toggle_ai(callback: CallbackQuery):
     settings["ai_filter"] = not settings["ai_filter"]
     await callback.message.edit_reply_markup(reply_markup=get_settings_markup(chat_id))
 
-@dp.callback_query(F.data == "toggle_modo_freelancer")
-async def toggle_modo_freelancer(callback: CallbackQuery):
+@dp.callback_query(F.data == "noop")
+async def noop(callback: CallbackQuery):
+    """Botão de cabeçalho de seção - não faz nada."""
     await callback.answer()
-    chat_id = callback.message.chat.id
-    settings = get_user_settings(chat_id)
-    is_now_on = not settings.get("modo_freelancer", False)
-    settings["modo_freelancer"] = is_now_on
-    
-    freelance_plats = ["workana", "novenove", "freelancer"]
-    clt_plats = ["jsearch", "jooble", "remotar", "github_vagas", "meta_ads", "indeed", "linkedin", "glassdoor", "infojobs"]
-    
-    if is_now_on:
-        for p in freelance_plats: settings["platforms"][p] = True
-        for p in clt_plats: settings["platforms"][p] = False
-        settings["contract"] = "Freelancer"
-    else:
-        for p in freelance_plats: settings["platforms"][p] = False
-        for p in clt_plats: settings["platforms"][p] = True
-        settings["contract"] = "Todos"
-        
-    await callback.message.edit_reply_markup(reply_markup=get_settings_markup(chat_id))
 
 @dp.callback_query(F.data.startswith("toggle_"))
 async def toggle_platform(callback: CallbackQuery):
@@ -240,20 +228,56 @@ async def toggle_platform(callback: CallbackQuery):
         settings["platforms"][plat] = not settings["platforms"][plat]
     await callback.message.edit_reply_markup(reply_markup=get_settings_markup(chat_id))
 
-# ----------------- CAÇAR VAGAS (NICHOS) -----------------
+# ----------------- CAÇAR VAGAS (MODO) -----------------
 @dp.callback_query(F.data == "hunt_menu")
 async def hunt_menu(callback: CallbackQuery):
     await callback.answer()
     markup = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🚀 Modo Freelance", callback_data="modo_freelance")],
+        [InlineKeyboardButton(text="💼 Modo Emprego", callback_data="modo_emprego")],
+        [InlineKeyboardButton(text="🌐 Modo Ambos", callback_data="modo_ambos")],
+        [InlineKeyboardButton(text="🔙 Voltar", callback_data="main_menu")]
+    ])
+    await callback.message.edit_text(
+        "🎯 *Onde você quer buscar vagas?*\n\n"
+        "🚀 *Freelance* — Workana e 99Freelas (projetos e propostas)\n"
+        "💼 *Emprego* — LinkedIn, Indeed, Glassdoor e mais\n"
+        "🌐 *Ambos* — Todas as plataformas ativas",
+        reply_markup=markup, parse_mode="Markdown"
+    )
+
+@dp.callback_query(F.data.startswith("modo_"))
+async def select_mode(callback: CallbackQuery):
+    await callback.answer()
+    chat_id = callback.message.chat.id
+    settings = get_user_settings(chat_id)
+    modo = callback.data.split("_")[1]  # freelance | emprego | ambos
+
+    # Ativa/desativa plataformas conforme o modo
+    if modo == "freelance":
+        for p in FREELANCE_PLATFORMS: settings["platforms"][p] = True
+        for p in EMPREGO_PLATFORMS: settings["platforms"][p] = False
+    elif modo == "emprego":
+        for p in FREELANCE_PLATFORMS: settings["platforms"][p] = False
+        for p in EMPREGO_PLATFORMS: settings["platforms"][p] = True
+    else:  # ambos
+        for p in FREELANCE_PLATFORMS + EMPREGO_PLATFORMS: settings["platforms"][p] = True
+
+    # Vai para o menu de nichos
+    menus_markup = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🧠 Especialista em IA", callback_data="nicho_ai")],
         [InlineKeyboardButton(text="💻 Desenvolvimento", callback_data="nicho_dev")],
         [InlineKeyboardButton(text="📊 Dados & RPA", callback_data="nicho_dados")],
         [InlineKeyboardButton(text="📈 Growth & Mkt", callback_data="nicho_mkt")],
         [InlineKeyboardButton(text="🎬 Audiovisual & Criação", callback_data="nicho_audio")],
         [InlineKeyboardButton(text="🌱 Início de Carreira (Júnior)", callback_data="nicho_junior")],
-        [InlineKeyboardButton(text="🔙 Voltar", callback_data="main_menu")]
+        [InlineKeyboardButton(text="🔙 Voltar ao Modo", callback_data="hunt_menu")]
     ])
-    await callback.message.edit_text("🎯 *Selecione o seu Nicho Estratégico:*", reply_markup=markup, parse_mode="Markdown")
+    modo_labels = {"freelance": "🚀 Freelance", "emprego": "💼 Emprego", "ambos": "🌐 Ambos"}
+    await callback.message.edit_text(
+        f"*Modo: {modo_labels[modo]}*\n\n🎯 Selecione o Nicho Estratégico:",
+        reply_markup=menus_markup, parse_mode="Markdown"
+    )
 
 @dp.callback_query(F.data.startswith("nicho_"))
 async def show_niche_jobs(callback: CallbackQuery):
